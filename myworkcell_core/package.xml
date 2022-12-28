@@ -55,12 +55,21 @@
   <build_export_depend>rospy</build_export_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
- <depend>fake_ar_publisher</depend>
- <build_depend>message_generation</build_depend>
- <exec_depend>message_runtime</exec_depend>
- <depend>geometry_msgs</depend>
- <depend> tf2_ros </depend>
- <depend> tf2_geometry_msgs </depend>
+  <depend> fake_ar_publisher </depend>
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+ <depend>moveit_ros_planning_interface</depend>
+  <depend>ur5_demo_descartes</depend>
+  <depend>descartes_trajectory</depend>
+  <depend>descartes_planner</depend>
+  <depend>descartes_utilities</depend>
+  <depend>trajectory_msgs</depend>
+  <depend>eigen_conversions</depend>
+  <depend>tf_conversions</depend>
+
 
 
 

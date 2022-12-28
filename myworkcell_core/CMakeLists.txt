@@ -11,16 +11,19 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   fake_ar_publisher
+  geometry_msgs
   message_generation
   tf2_ros
   tf2_geometry_msgs
+  moveit_ros_planning_interface
+  ur5_demo_descartes
+  descartes_trajectory
+  descartes_planner
+  descartes_utilities
+  trajectory_msgs
+  eigen_conversions
+  tf_conversions
 )
-
-catkin_install_python(PROGRAMS
-src/vision_node.py
-DESTINATION @{CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -66,8 +69,9 @@ DESTINATION @{CATKIN_PACKAGE_BIN_DESTINATION}
  add_service_files(
    FILES
    LocalizePart.srv
-#   Service1.srv
-#   Service2.srv
+  PlanCartesianPath.srv
+  MoveToPose.srv
+  ExecuteTrajectory.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -80,9 +84,8 @@ DESTINATION @{CATKIN_PACKAGE_BIN_DESTINATION}
 ## Generate added messages and services with any dependencies listed here
  generate_messages(
    DEPENDENCIES
-   geometry_msgs
-
-#   std_msgs  # Or other packages containing msgs
+   geometry_msgs  # Or other packages containing msgs
+   trajectory_msgs
  )
 
 ################################################
@@ -123,8 +126,16 @@ catkin_package(
   geometry_msgs
   tf2_ros
   tf2_geometry_msgs
-#  DEPENDS system_lib
+   moveit_ros_planning_interface
+   ur5_demo_descartes
+   descartes_trajectory
+   descartes_planner
+   descartes_utilities
+   trajectory_msgs
+   eigen_conversions
+tf_conversions
 
+#  DEPENDS system_lib
 )
 
 ###########
@@ -161,7 +172,7 @@ include_directories(
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+##add_dependencies(vision_node.py ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
@@ -177,16 +188,38 @@ include_directories(
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+ catkin_install_python(PROGRAMS
+   src/vision_node.py src/myworkcell_node.py
+   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ )
+
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
 # install(TARGETS ${PROJECT_NAME}_node
 #   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
+
+
+add_executable(descartes_node src/descartes_node.cpp)
+
+add_executable(adv_descartes_node src/adv_descartes_node.cpp)
+add_dependencies(adv_descartes_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(adv_descartes_node ${catkin_LIBRARIES})
+
+add_executable(adv_myworkcell_node src/adv_myworkcell_node.cpp)
+add_dependencies(adv_myworkcell_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(adv_myworkcell_node ${catkin_LIBRARIES})
+
+add_executable(myworkcell_node src/myworkcell_node.cpp)
+add_dependencies(myworkcell_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(myworkcell_node ${catkin_LIBRARIES})
+add_executable(vision_node src/vision_node.cpp)
+add_dependencies(vision_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(vision_node ${catkin_LIBRARIES})
+
+add_dependencies(descartes_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(descartes_node ${catkin_LIBRARIES})
 
 ## Mark libraries for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_libraries.html
